@@ -1,0 +1,63 @@
+/* Malonza Markets Admin Theme */
+#header {
+    background: #0088cc !important;
+    color: white !important;
+}
+
+#header a:link, #header a:visited {
+    color: white !important;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    background: #0088cc !important;
+    color: white !important;
+}
+
+div.breadcrumbs {
+    background: #006699 !important;
+}
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #0088cc !important;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover {
+    background: #006699 !important;
+}
+
+.selector-chosen h2 {
+    background: #0088cc !important;
+}
+
+/* Make list display cleaner */
+#changelist-form .results {
+    border-collapse: collapse;
+}
+
+#changelist-form .results tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-active {
+    background: #28a745;
+    color: white;
+}
+
+.status-pending {
+    background: #ffc107;
+    color: #333;
+}
+
+.status-completed {
+    background: #28a745;
+    color: white;
+}

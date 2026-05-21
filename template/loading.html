@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing - Malonza Markets</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8f9fa;
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-card {
+            background: #ffffff;
+            border-radius: 2px;
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            margin-bottom: 30px;
+        }
+
+        .logo h2 {
+            color: #0088cc;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .logo span {
+            color: #333;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 25px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #0088cc;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        h4 {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .status-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .dots span {
+            width: 6px;
+            height: 6px;
+            background: #0088cc;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .dots span:nth-child(1) { animation-delay: -0.32s; }
+        .dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .success-icon i {
+            font-size: 28px;
+            color: white;
+        }
+
+        .error-icon {
+            width: 60px;
+            height: 60px;
+            background: #dc3545;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .error-icon i {
+            font-size: 28px;
+            color: white;
+        }
+
+        .btn-custom {
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-custom:hover {
+            background: #006699;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .small-text {
+            color: #999;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-card" id="loadingCard">
+        <!-- Loading State -->
+        <div id="loadingState">
+            <div class="logo">
+                <h2>Malonza<span>Markets</span><span style="color: #0088cc;">®</span></h2>
+            </div>
+            <div class="loader"></div>
+            <h4>Processing Payment</h4>
+            <p class="status-text" id="statusText">Verifying transaction <span class="dots"><span>.</span><span>.</span><span>.</span></span></p>
+            <p class="small-text">Please don't close this window</p>
+        </div>
+
+        <!-- Success State -->
+        <div id="successState" class="hidden">
+            <div class="logo">
+                <h2>Malonza<span>Markets</span><span style="color: #0088cc;">®</span></h2>
+            </div>
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h4>Payment Successful!</h4>
+            <p class="status-text" id="successMessage">Your payment has been completed.</p>
+            <a href="/dashboard" class="btn-custom">Go to Dashboard</a>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden">
+            <div class="logo">
+                <h2>Malonza<span>Markets</span><span style="color: #0088cc;">®</span></h2>
+            </div>
+            <div class="error-icon">
+                <i class="fas fa-times"></i>
+            </div>
+            <h4>Payment Failed</h4>
+            <p class="status-text" id="errorMessage">Something went wrong. Please try again.</p>
+            <a href="javascript:history.back()" class="btn-custom">Try Again</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script>
+        const paymentId = '{{ payment_id }}';
+        const paymentType = '{{ payment_type }}';
+        
+        const statusText = document.getElementById('statusText');
+        const messages = [
+            'Connecting to payment gateway',
+            'Verifying your details',
+            'Processing transaction',
+            'Almost complete'
+        ];
+        
+        let msgIndex = 0;
+        
+        // Rotate status messages
+        const messageInterval = setInterval(() => {
+            if (msgIndex < messages.length - 1) {
+                msgIndex++;
+                statusText.innerHTML = messages[msgIndex] + ' <span class="dots"><span>.</span><span>.</span><span>.</span></span>';
+            }
+        }, 2500);
+        
+        // Check payment status
+        function checkPaymentStatus() {
+            fetch(`/api/payment-status/?payment_id=${paymentId}&payment_type=${paymentType}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'completed') {
+                        clearInterval(messageInterval);
+                        document.getElementById('loadingState').classList.add('hidden');
+                        document.getElementById('successState').classList.remove('hidden');
+                        
+                        if (paymentType === 'course') {
+                            document.getElementById('successMessage').innerHTML = 'You can now access your course from your dashboard.';
+                        } else {
+                            document.getElementById('successMessage').innerHTML = 'Check your email and WhatsApp for access details.';
+                        }
+                    } else if (data.status === 'failed') {
+                        clearInterval(messageInterval);
+                        document.getElementById('loadingState').classList.add('hidden');
+                        document.getElementById('errorState').classList.remove('hidden');
+                    } else {
+                        setTimeout(checkPaymentStatus, 2000);
+                    }
+                })
+                .catch(() => {
+                    setTimeout(checkPaymentStatus, 3000);
+                });
+        }
+        
+        setTimeout(checkPaymentStatus, 3000);
+    </script>
+</body>
+</html>

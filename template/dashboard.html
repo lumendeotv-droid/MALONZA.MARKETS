@@ -1,0 +1,1365 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Dashboard - Malonza Markets</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f2f5;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .sidebar {
+            background: #0a0f26;
+            min-height: 100vh;
+            border-right: none;
+            position: fixed;
+            width: 260px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h3 {
+            color: #0088cc;
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.3rem;
+            white-space: nowrap;
+        }
+
+        .sidebar-header h3 span {
+            color: white;
+        }
+
+        .sidebar-header p {
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(0, 136, 204, 0.15);
+            border-left-color: #0088cc;
+            color: #0088cc;
+        }
+
+        .sidebar-menu a i {
+            width: 28px;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 20px 25px;
+            transition: all 0.3s ease;
+        }
+
+        .top-nav {
+            background: #ffffff;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .welcome-text h4 {
+            color: #333;
+            margin-bottom: 2px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .welcome-text p {
+            color: #666;
+            margin-bottom: 0;
+            font-size: 12px;
+        }
+
+        .logout-btn {
+            background: #fee2e2;
+            color: #dc3545;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #0088cc;
+            padding: 16px;
+            transition: all 0.3s;
+            height: 100%;
+            border-radius: 12px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,136,204,0.15);
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 136, 204, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            border-radius: 10px;
+        }
+
+        .stat-icon i {
+            font-size: 20px;
+            color: #0088cc;
+        }
+
+        .stat-card h3 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-card p {
+            color: #666;
+            margin-bottom: 0;
+            font-size: 12px;
+        }
+
+        .section-title {
+            color: #333;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0088cc;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .course-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .course-card:hover {
+            transform: translateY(-3px);
+            border-color: #0088cc;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .course-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .course-info {
+            padding: 15px;
+        }
+
+        .course-info h5 {
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .course-info p {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .price-badge {
+            background: #0088cc;
+            color: white;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+            border-radius: 20px;
+        }
+
+        .price-badge.purchased {
+            background: #28a745;
+        }
+
+        .btn-download {
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .btn-download:hover {
+            background: #006699;
+        }
+
+        .btn-download:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-buy {
+            background: transparent;
+            border: 2px solid #0088cc;
+            color: #0088cc;
+            padding: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .btn-buy:hover {
+            background: #0088cc;
+            color: white;
+        }
+
+        .btn-view-course {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .btn-view-course:hover {
+            background: #1e7e34;
+        }
+
+        .course-detail-modal .modal-content {
+            border-radius: 12px;
+        }
+        .course-detail-modal .modal-header {
+            border-bottom: 1px solid #e0e0e0;
+            background: #f8f9fa;
+        }
+        .course-detail-modal .modal-body {
+            padding: 25px;
+        }
+        .course-detail-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .course-detail-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .course-detail-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .course-detail-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0088cc;
+            margin-bottom: 20px;
+        }
+        .course-detail-pdf {
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .course-detail-pdf:hover {
+            background: #006699;
+        }
+        .course-video-item {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .course-video-title {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        .btn-watch-video {
+            background: transparent;
+            border: 2px solid #0088cc;
+            color: #0088cc;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-watch-video:hover {
+            background: #0088cc;
+            color: white;
+        }
+
+        .video-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .video-card:hover {
+            transform: translateY(-3px);
+            border-color: #0088cc;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .video-thumbnail {
+            position: relative;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 136, 204, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .play-overlay i {
+            font-size: 20px;
+            color: white;
+            margin-left: 3px;
+        }
+
+        .video-card:hover .play-overlay {
+            background: #0088cc;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-info h5 {
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .video-info p {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .btn-watch {
+            background: transparent;
+            border: 2px solid #0088cc;
+            color: #0088cc;
+            padding: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 12px;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .btn-watch:hover {
+            background: #0088cc;
+            color: white;
+        }
+
+        .bot-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 100%;
+            position: relative;
+            border-radius: 8px;
+        }
+
+        .bot-card:hover {
+            transform: translateY(-3px);
+            border-color: #0088cc;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .bot-card.featured {
+            border: 2px solid #0088cc;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #0088cc;
+            color: white;
+            padding: 3px 10px;
+            font-size: 10px;
+            font-weight: 600;
+            z-index: 1;
+            border-radius: 20px;
+        }
+
+        .bot-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .bot-info {
+            padding: 15px;
+        }
+
+        .bot-info h5 {
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .bot-info p {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .bot-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0088cc;
+            margin-bottom: 10px;
+        }
+
+        .btn-buy-bot {
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 12px;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .btn-buy-bot:hover {
+            background: #006699;
+        }
+        
+        .btn-coming-soon {
+            background: #ccc;
+            color: #666;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            font-weight: 600;
+            font-size: 12px;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            cursor: not-allowed;
+            border-radius: 6px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            color: #0088cc;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-state h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .empty-state p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        
+        .empty-state .btn-primary-custom {
+            background: #0088cc;
+            color: white;
+            padding: 8px 24px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            border-radius: 6px;
+        }
+        
+        .empty-state .btn-primary-custom:hover {
+            background: #006699;
+        }
+
+        .custom-market-ticker-container {
+            background: #0a0f26;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 136, 204, 0.3);
+            border-radius: 8px;
+        }
+        
+        .custom-market-ticker-container .ticker-header {
+            background: rgba(0, 136, 204, 0.15);
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .custom-market-ticker-container .ticker-header h6 {
+            color: #0088cc;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 0.75rem;
+            margin: 0;
+        }
+        
+        .custom-ticker-wrapper {
+            height: 50px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .custom-ticker-content {
+            display: flex;
+            position: absolute;
+            white-space: nowrap;
+            animation: custom-ticker-scroll 40s linear infinite;
+        }
+        
+        .ticker-panel {
+            display: inline-block;
+            min-width: 200vw;
+        }
+        
+        @keyframes custom-ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .tradingview-widget-container__widget {
+            height: 50px !important;
+        }
+
+        .stat-card table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .stat-card th, .stat-card td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            color: #555;
+            font-size: 12px;
+        }
+        
+        .stat-card th {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-control-custom {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            padding: 10px 12px;
+            width: 100%;
+            color: #333;
+            font-size: 13px;
+            transition: all 0.3s;
+            border-radius: 6px;
+        }
+        
+        .form-control-custom:focus {
+            outline: none;
+            border-color: #0088cc;
+            box-shadow: 0 0 0 3px rgba(0,136,204,0.1);
+        }
+        
+        label {
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+            font-size: 12px;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            border-radius: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 260px;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .top-nav {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .stat-card h3 {
+                font-size: 22px;
+            }
+            .welcome-text h4 {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logout-btn {
+                align-self: flex-start;
+            }
+            .row {
+                margin-left: -8px;
+                margin-right: -8px;
+            }
+            .col-6, .col-md-3, .col-lg-3 {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            color: #0088cc;
+            font-size: 18px;
+            cursor: pointer;
+            margin-right: 12px;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+        
+        .menu-toggle:hover {
+            background: #0088cc;
+            color: white;
+            border-color: #0088cc;
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Malonza<span style="color: white;"> Markets</span><span style="color: #0088cc;">®</span></h3>
+            <p>Welcome, {{ user.username }}</p>
+        </div>
+        <div class="sidebar-menu">
+            <a href="#" class="active" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="#" data-page="videos">
+                <i class="fab fa-youtube"></i> Video Library
+            </a>
+            <a href="#" data-page="bots">
+                <i class="fas fa-robot"></i> Trading Bots & AI
+            </a>
+            <a href="#" data-page="courses">
+                <i class="fas fa-book"></i> My Courses
+            </a>
+            <a href="#" data-page="purchases">
+                <i class="fas fa-shopping-cart"></i> Purchases
+            </a>
+            <a href="#" data-page="profile">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="/logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-nav">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="welcome-text">
+                    <h4>Welcome back, {{ user.username }}!</h4>
+                    <p>Track your trading journey</p>
+                </div>
+            </div>
+            <a href="/logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+
+        <div class="custom-market-ticker-container">
+            <div class="ticker-header">
+                <h6>
+                    <i class="fas fa-chart-line me-1"></i> REAL-TIME GLOBAL MARKET DATA STREAM
+                </h6>
+            </div>
+            <div class="custom-ticker-wrapper">
+                <div class="custom-ticker-content">
+                    <div class="tradingview-widget-container ticker-panel">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+                        {
+                            "symbols": [
+                                {"proName": "FX_IDC:USDJPY", "title": "USD/JPY"},
+                                {"proName": "FX_IDC:USDCAD", "title": "USD/CAD"},
+                                {"proName": "FX_IDC:AUDUSD", "title": "AUD/USD"},
+                                {"proName": "FX_IDC:USDCHF", "title": "USD/CHF"},
+                                {"proName": "FX_IDC:GBPUSD", "title": "GBP/USD"},
+                                {"proName": "FX_IDC:EURUSD", "title": "EUR/USD"},
+                                {"proName": "FX_IDC:XAUUSD", "title": "GOLD"},
+                                {"proName": "FX_IDC:XAGUSD", "title": "SILVER"},
+                                {"proName": "BITSTAMP:BTCUSD", "title": "BTC/USD"},
+                                {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"}
+                            ],
+                            "colorTheme": "dark",
+                            "isTransparent": false,
+                            "showSymbolLogo": true,
+                            "locale": "en"
+                        }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboardContent">
+            <div class="row mb-4 g-3">
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-book"></i></div>
+                        <h3>{{ purchased_courses|length }}</h3>
+                        <p>Courses Purchased</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-download"></i></div>
+                        <h3>{{ downloads_count }}</h3>
+                        <p>Downloads</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Active</h3>
+                        <p>Member Since</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                        <h3>{{ user.created_at|date:"M Y" }}</h3>
+                        <p>Join Date</p>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="section-title">Latest Trading Videos</h4>
+            <div class="row mt-3 g-3">
+                {% if featured_videos %}
+                    {% for video in featured_videos %}
+                    <div class="col-md-4">
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                {% if video.get_thumbnail_url %}
+                                    <img src="{{ video.get_thumbnail_url }}" alt="{{ video.title }}" onerror="this.src='https://via.placeholder.com/320x180/333/white?text=No+Thumbnail'">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/320x180/333/white?text=No+Thumbnail" alt="No Thumbnail">
+                                {% endif %}
+                                <div class="play-overlay"><i class="fas fa-play"></i></div>
+                            </div>
+                            <div class="video-info">
+                                <h5>{{ video.title|truncatechars:50 }}</h5>
+                                <p>{{ video.description|truncatechars:80|default:"No description available." }}</p>
+                                <a href="{{ video.get_watch_url }}" target="_blank" class="btn-watch">
+                                    <i class="fab fa-youtube me-1"></i> Watch on YouTube
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fab fa-youtube"></i>
+                            <h4>No Videos Yet</h4>
+                            <p>Educational videos will be added soon. Check back later!</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <h4 class="section-title mt-4">Trading Bots & AI Solutions</h4>
+            <div class="row mt-3 g-3">
+                {% if all_bots %}
+                    {% for bot in all_bots %}
+                    <div class="col-md-4">
+                        <div class="bot-card {% if bot.is_featured %}featured{% endif %}">
+                            {% if bot.is_featured %}<div class="featured-badge">⭐ FEATURED</div>{% endif %}
+                            <img src="{{ bot.image.url }}" alt="{{ bot.name }}" class="bot-image">
+                            <div class="bot-info">
+                                <h5>{{ bot.name }}</h5>
+                                <p>{{ bot.description|truncatechars:80 }}</p>
+                                <div class="bot-price">${{ bot.price }}</div>
+                                {% if bot.pdf %}
+                                <a href="{{ bot.pdf.url }}" download class="btn-buy-bot">
+                                    <i class="fas fa-download me-1"></i> Download Bot
+                                </a>
+                                {% else %}
+                                <span class="btn-coming-soon">No File Available</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fas fa-robot"></i>
+                            <h4>Trading Bots Coming Soon</h4>
+                            <p>Our AI-powered trading solutions are under development.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Available Courses Section - Shows ALL courses with Purchase/View button -->
+            <h4 class="section-title mt-4">Available Courses</h4>
+            <div class="row mt-3 g-3">
+                {% if all_courses %}
+                    {% for course in all_courses %}
+                    <div class="col-6 col-lg-3">
+                        <div class="course-card">
+                            {% if course.image %}
+                            <img src="{{ course.image.url }}" alt="{{ course.title }}">
+                            {% else %}
+                            <img src="{% static 'img/default-course.jpg' %}" alt="Course">
+                            {% endif %}
+                            <div class="course-info">
+                                <span class="price-badge">${{ course.priceusd }}</span>
+                                <h5>{{ course.title|truncatechars:25 }}</h5>
+                                <p>{{ course.description|truncatechars:50|default:"No description available." }}</p>
+                                {% if course.id in purchased_course_ids %}
+                                    <button class="btn-view-course" onclick="openCourseModal({{ course.id }})">
+                                        <i class="fas fa-eye me-1"></i> View Course
+                                    </button>
+                                {% else %}
+                                    <button class="btn-buy" onclick="window.location.href='/coursepayments/{{course.priceusd}}/{{course.id}}'">
+                                        <i class="fas fa-shopping-cart me-1"></i> Purchase
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <h4>No Courses Available</h4>
+                            <p>There are no courses uploaded yet. Please check back later.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Course Detail Modal -->
+        <div class="modal fade course-detail-modal" id="courseModal" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Course Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="courseModalBody">
+                        <!-- Dynamic content loaded via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="videosContent" style="display: none;">
+            <h4 class="section-title">Video Library</h4>
+            <div class="row mt-3 g-3">
+                {% if all_videos %}
+                    {% for video in all_videos %}
+                    <div class="col-md-4">
+                        <div class="video-card">
+                            <div class="video-thumbnail">
+                                {% if video.get_thumbnail_url %}
+                                    <img src="{{ video.get_thumbnail_url }}" alt="{{ video.title }}" onerror="this.src='https://via.placeholder.com/320x180/333/white?text=No+Thumbnail'">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/320x180/333/white?text=No+Thumbnail" alt="No Thumbnail">
+                                {% endif %}
+                                <div class="play-overlay"><i class="fas fa-play"></i></div>
+                            </div>
+                            <div class="video-info">
+                                <h5>{{ video.title|truncatechars:50 }}</h5>
+                                <p>{{ video.description|truncatechars:80|default:"No description available." }}</p>
+                                <a href="{{ video.get_watch_url }}" target="_blank" class="btn-watch"><i class="fab fa-youtube me-1"></i> Watch on YouTube</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fab fa-youtube"></i>
+                            <h4>Video Library Coming Soon</h4>
+                            <p>Educational videos will be uploaded here. Stay tuned!</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="botsContent" style="display: none;">
+            <h4 class="section-title">Trading Bots & AI Solutions</h4>
+            <div class="row mt-3 g-3">
+                {% if all_bots %}
+                    {% for bot in all_bots %}
+                    <div class="col-md-4">
+                        <div class="bot-card {% if bot.is_featured %}featured{% endif %}">
+                            {% if bot.is_featured %}<div class="featured-badge">⭐ FEATURED</div>{% endif %}
+                            <img src="{{ bot.image.url }}" alt="{{ bot.name }}" class="bot-image">
+                            <div class="bot-info">
+                                <h5>{{ bot.name }}</h5>
+                                <p>{{ bot.description }}</p>
+                                <div class="bot-price">${{ bot.price }}</div>
+                                {% if bot.pdf %}
+                                <a href="{{ bot.pdf.url }}" download class="btn-buy-bot">
+                                    <i class="fas fa-download me-1"></i> Download Bot
+                                </a>
+                                {% else %}
+                                <span class="btn-coming-soon">Coming Soon</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fas fa-robot"></i>
+                            <h4>Trading Bots Coming Soon</h4>
+                            <p>Our AI-powered trading solutions are under development.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- My Courses Page - Shows ALL courses (purchased and non-purchased) -->
+        <div id="coursesContent" style="display: none;">
+            <h4 class="section-title">All Courses</h4>
+            <div class="row mt-3 g-3">
+                {% if all_courses %}
+                    {% for course in all_courses %}
+                    <div class="col-6 col-lg-3">
+                        <div class="course-card">
+                            {% if course.image %}
+                            <img src="{{ course.image.url }}" alt="{{ course.title }}">
+                            {% else %}
+                            <img src="{% static 'img/default-course.jpg' %}" alt="Course">
+                            {% endif %}
+                            <div class="course-info">
+                                {% if course.id in purchased_course_ids %}
+                                    <span class="price-badge purchased">✓ Purchased</span>
+                                    <button class="btn-view-course" onclick="openCourseModal({{ course.id }})">
+                                        <i class="fas fa-eye me-1"></i> View Course
+                                    </button>
+                                {% else %}
+                                    <span class="price-badge">${{ course.priceusd }}</span>
+                                    <button class="btn-buy" onclick="window.location.href='/coursepayments/{{course.priceusd}}/{{course.id}}'">
+                                        <i class="fas fa-shopping-cart me-1"></i> Purchase
+                                    </button>
+                                {% endif %}
+                                <h5 class="mt-2">{{ course.title|truncatechars:25 }}</h5>
+                                <p>{{ course.description|truncatechars:50|default:"No description available." }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <h4>No Courses Available</h4>
+                            <p>There are no courses uploaded yet. Please check back later.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="purchasesContent" style="display: none;">
+            <h4 class="section-title">Purchase History</h4>
+            <div class="row mt-3">
+                <div class="col-12">
+                    {% if purchases %}
+                    <div class="stat-card" style="padding: 0; overflow-x: auto;">
+                        <table style="min-width: 400px;">
+                            <thead><tr><th>Course</th><th>Price</th><th>Date</th><th>Status</th></tr></thead>
+                            <tbody>
+                                {% for purchase in purchases %}
+                                <tr>
+                                    <td>{{ purchase.course__title|truncatechars:30 }}</td>
+                                    <td>${{ purchase.amountusd }}</td>
+                                    <td>{{ purchase.timestamp|date:"M d, Y" }}</td>
+                                    <td><span class="status-completed">Completed</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-receipt"></i>
+                        <h4>No Purchase History</h4>
+                        <p>You haven't made any purchases yet.</p>
+                        <a href="#" class="btn-primary-custom" onclick="showPage('dashboard')">Browse Courses</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div id="profileContent" style="display: none;">
+            <h4 class="section-title">My Profile</h4>
+            <div class="row mt-3 g-3">
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <form method="post" action="/update_profile" id="profileForm">
+                            {% csrf_token %}
+                            <div class="mb-3"><label>Username</label><input type="text" name="username" value="{{ user.username }}" class="form-control-custom"></div>
+                            <div class="mb-3"><label>Email</label><input type="email" value="{{ user.email }}" class="form-control-custom" readonly style="background:#f5f5f5;"></div>
+                            <div class="mb-3"><label>Phone Number</label><input type="text" name="phone" value="{{ user.phone }}" class="form-control-custom"></div>
+                            <div class="mb-3"><label>Member Since</label><input type="text" value="{{ user.created_at|date:"F d, Y" }}" class="form-control-custom" readonly style="background:#f5f5f5;"></div>
+                            <button type="submit" class="btn-download" style="width: auto; padding: 8px 24px;">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <h5 style="color: #333; margin-bottom: 15px; font-weight: 600;">Account Statistics</h5>
+                        <div style="margin-bottom: 12px;"><i class="fas fa-book" style="color: #0088cc; width: 28px;"></i> Total Courses: <strong>{{ purchased_courses|length }}</strong></div>
+                        <div style="margin-bottom: 12px;"><i class="fas fa-download" style="color: #0088cc; width: 28px;"></i> Total Downloads: <strong>{{ downloads_count }}</strong></div>
+                        <div><i class="fas fa-calendar" style="color: #0088cc; width: 28px;"></i> Member Since: <strong>{{ user.created_at|date:"F d, Y" }}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Course Modal Data (populated from backend) - Using course_videos relationship
+        const courseData = {
+            {% for course in all_courses %}
+            {{ course.id }}: {
+                id: {{ course.id }},
+                title: "{{ course.title|escapejs }}",
+                description: "{{ course.description|escapejs|default:'No description available.' }}",
+                price: {{ course.priceusd }},
+                image_url: "{% if course.image %}{{ course.image.url }}{% endif %}",
+                pdf_url: "{% if course.pdf %}{{ course.pdf.url }}{% endif %}",
+                videos: [
+                    {% for video in course.course_videos.all %}
+                    {
+                        id: {{ video.id }},
+                        title: "{{ video.title|escapejs }}",
+                        video_type: "{{ video.video_type }}",
+                        video_url: "{{ video.video_url|default:'' }}",
+                        video_file_url: "{% if video.video_file %}{{ video.video_file.url }}{% endif %}"
+                    },
+                    {% endfor %}
+                ],
+                is_purchased: {% if course.id in purchased_course_ids %}true{% else %}false{% endif %}
+            },
+            {% endfor %}
+        };
+
+        function openCourseModal(courseId) {
+            const course = courseData[courseId];
+            if (!course) return;
+
+            const modalBody = document.getElementById('courseModalBody');
+            const isPurchased = course.is_purchased;
+            
+            let videosHtml = '';
+            if (course.videos && course.videos.length > 0) {
+                videosHtml = '<h6 style="margin-top: 20px; margin-bottom: 15px; color: #333;">Course Videos</h6>';
+                course.videos.forEach(video => {
+                    let watchUrl = '';
+                    if (video.video_type === 'youtube' && video.video_url) {
+                        let videoId = video.video_url.split('v=')[1]?.split('&')[0] || video.video_url.split('/').pop();
+                        watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                    } else if (video.video_file_url) {
+                        watchUrl = video.video_file_url;
+                    }
+                    
+                    videosHtml += `
+                        <div class="course-video-item">
+                            <div>
+                                <i class="fas fa-video" style="color: #0088cc; margin-right: 10px;"></i>
+                                <span class="course-video-title">${video.title}</span>
+                            </div>
+                            <a href="${watchUrl}" target="_blank" class="btn-watch-video">Watch <i class="fas fa-external-link-alt ms-1"></i></a>
+                        </div>
+                    `;
+                });
+            } else {
+                videosHtml = '<p style="color: #999; margin-top: 15px;">No videos available for this course.</p>';
+            }
+
+            let pdfButton = '';
+            if (course.pdf_url) {
+                if (isPurchased) {
+                    pdfButton = `<a href="${course.pdf_url}" download class="course-detail-pdf"><i class="fas fa-download me-2"></i> Download Course PDF</a>`;
+                } else {
+                    pdfButton = `<a href="/coursepayments/${course.price}/${course.id}" class="course-detail-pdf" style="background: #28a745;"><i class="fas fa-shopping-cart me-2"></i> Purchase to Download ($${course.price})</a>`;
+                }
+            }
+
+            modalBody.innerHTML = `
+                <img src="${course.image_url || 'https://via.placeholder.com/800x300/333/white?text=No+Image'}" class="course-detail-image" alt="${course.title}">
+                <h2 class="course-detail-title">${course.title}</h2>
+                <div class="course-detail-description">${course.description}</div>
+                <div class="course-detail-price">Price: $${course.price}</div>
+                <h6 style="margin-bottom: 10px; color: #333;">Course Materials</h6>
+                ${pdfButton}
+                ${videosHtml}
+            `;
+
+            const modal = new bootstrap.Modal(document.getElementById('courseModal'));
+            modal.show();
+        }
+
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        }
+        
+        function openSidebar() {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+        }
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (sidebar.classList.contains('active')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeSidebar);
+        }
+
+        const menuLinks = document.querySelectorAll('.sidebar-menu a[data-page]');
+        
+        function showPage(page) {
+            const pages = ['dashboard', 'videos', 'bots', 'courses', 'purchases', 'profile'];
+            pages.forEach(p => {
+                const content = document.getElementById(p + 'Content');
+                if (content) content.style.display = p === page ? 'block' : 'none';
+            });
+            if (window.innerWidth <= 768) closeSidebar();
+        }
+        
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.getAttribute('data-page');
+                menuLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                showPage(page);
+            });
+        });
+        
+        const profileForm = document.getElementById('profileForm');
+        if (profileForm) {
+            profileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                fetch('/update_profile', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Profile updated successfully!');
+                        location.reload();
+                    } else {
+                        alert('Error updating profile.');
+                    }
+                })
+                .catch(() => alert('An error occurred.'));
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
