@@ -87,12 +87,13 @@ WSGI_APPLICATION = 'dict.wsgi.application'
 
 
 # Database - Use PostgreSQL on Railway, SQLite locally
+# Check if we're on Railway (has DATABASE_URL) or using SQLite locally
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(
             conn_max_age=600,
             conn_health_checks=True,
-            ssl_require=True
+            ssl_require=True  # Required for Railway PostgreSQL
         )
     }
 else:
@@ -143,7 +144,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # Added for Whitenoise
+
+# Only use compressed storage in production, fallback to simple storage if missing files
+if not DEBUG:
+    try:
+        STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    except:
+        STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Media files (User uploaded files) - Local storage
 MEDIA_URL = '/media/'
@@ -177,3 +186,18 @@ else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     SECURE_HSTS_SECONDS = 0
+    USE_X_FORWARDED_HOST = False
+    USE_X_FORWARDED_PORT = False
+
+# Railway specific settings
+if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('DATABASE_URL'):
+    # Ensure these are set correctly for Railway
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_HOST = True
+    USE_X_FORWARDED_PORT = True
+    
+    # Only enforce HTTPS in production (not when DEBUG=True)
+    if not DEBUG:
+        SECURE_SSL_REDIRECT = True
+        SESSION_COOKIE_SECURE = True
+        CSRF_COOKIE_SECURE = True

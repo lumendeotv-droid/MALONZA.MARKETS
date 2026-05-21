@@ -1,6 +1,6 @@
 FROM python:3.10-alpine
 
-# Set environment variables - Fixed format
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV DEBUG=0
@@ -20,28 +20,26 @@ RUN apk add --no-cache \
     cargo \
     postgresql-dev
 
-# Install ALL dependencies at once from requirements.txt
+# Copy requirements and install dependencies
 COPY ./requirements.txt .
-RUN pip install --upgrade pip setuptools wheel && \
-    pip install -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel
+RUN pip install -r requirements.txt
 
 # Copy project
 COPY . .
 
-# Create necessary directories
+# Create necessary directories and placeholder images
 RUN mkdir -p staticfiles media static/img
+RUN if [ ! -f static/img/carousel-1.jpg ]; then touch static/img/carousel-1.jpg; fi
 
-# Create missing image placeholder (replace with actual images)
-RUN touch static/img/carousel-1.jpg
-
-# Temporarily disable manifest storage if it causes issues
-RUN sed -i 's/STATICFILES_STORAGE/# STATICFILES_STORAGE/g' dict/settings.py || true
-
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Run Django migrations and collect static files
+RUN python manage.py migrate --noinput
+RUN python manage.py collectstatic --noinput || \
+    (echo "Collectstatic failed with manifest storage, retrying without compression..." && \
+     python manage.py collectstatic --noinput --ignore=*.css)
 
 # Expose port
 EXPOSE 8080
 
-# Run the application - Fixed JSON format
-CMD ["sh", "-c", "gunicorn dict.wsgi:application --bind 0.0.0.0:${PORT} --workers 3"]
+# Run migrations on startup (safety net) then start gunicorn
+CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn dict.wsgi:application --bind 0.0.0.0:${PORT} --workers 3"]
