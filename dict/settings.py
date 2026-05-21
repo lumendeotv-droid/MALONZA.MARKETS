@@ -86,23 +86,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dict.wsgi.application'
 
 
-# Database - Use PostgreSQL on Railway, SQLite locally
-# Check if we're on Railway (has DATABASE_URL) or using SQLite locally
-if os.environ.get('DATABASE_URL'):
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            conn_health_checks=True,
-            ssl_require=True  # Required for Railway PostgreSQL
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+# Database - HARDCODED PostgreSQL connection
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgresql://postgres:aEGySwisWYqOzQsPSHAbMIElQHVqlFJY@nozomi.proxy.rlwy.net:23005/railway',
+        conn_max_age=600,
+        conn_health_checks=True,
+        ssl_require=True
+    )
+}
 
 
 # Password validation
