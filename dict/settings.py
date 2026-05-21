@@ -86,12 +86,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dict.wsgi.application'
 
 
-# Database - HARDCODED PostgreSQL connection
+# Database - HARDCODED PostgreSQL connection (FIXED: removed conn_health_checks)
 DATABASES = {
     'default': dj_database_url.config(
         default='postgresql://postgres:aEGySwisWYqOzQsPSHAbMIElQHVqlFJY@nozomi.proxy.rlwy.net:23005/railway',
         conn_max_age=600,
-        conn_health_checks=True,
         ssl_require=True
     )
 }
