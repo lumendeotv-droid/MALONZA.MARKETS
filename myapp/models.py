@@ -409,31 +409,39 @@ class UserCourseAccess(models.Model):
         return f"{self.user.username} - {self.course.title}"
 
 
+# ========== SERVICE PAYMENTS (UPDATED WITH PAYSTACK) ==========
 class ServicePayments(models.Model):
     email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)  # For M-Pesa
     service = models.CharField(max_length=100)
     userId = models.IntegerField()
     amountkes = models.FloatField(default=0.0)
     amountusd = models.FloatField(default=0.0)
-    mpesa_number = models.CharField(max_length=20)
+    mpesa_number = models.CharField(max_length=20, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=20, default='initialized')
-    payment_method = models.CharField(max_length=20, default='mpesa')
+    payment_status = models.CharField(max_length=20, default='pending')  # pending, completed, failed
+    payment_method = models.CharField(max_length=20, default='paystack')  # paystack, mpesa, card
+    payment_reference = models.CharField(max_length=100, blank=True, null=True)  # Paystack reference
+    channel = models.CharField(max_length=50, blank=True, null=True)  # card, mobile_money
     
     def __str__(self):
         return f"{self.email} - {self.service} - {self.payment_status}"
 
 
+# ========== COURSE PAYMENTS (UPDATED WITH PAYSTACK) ==========
 class CoursePayments(models.Model):
     email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)  # For M-Pesa
     courseId = models.IntegerField()
     userId = models.IntegerField()
     amountkes = models.FloatField(default=0.0)
     amountusd = models.FloatField(default=0.0)
-    mpesa_number = models.CharField(max_length=20)
+    mpesa_number = models.CharField(max_length=20, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=20, default='initialized')
-    payment_method = models.CharField(max_length=20, default='mpesa')
+    payment_status = models.CharField(max_length=20, default='pending')
+    payment_method = models.CharField(max_length=20, default='paystack')
+    payment_reference = models.CharField(max_length=100, blank=True, null=True)
+    channel = models.CharField(max_length=50, blank=True, null=True)  # card, mobile_money
     
     def __str__(self):
         return f"{self.email} - Course {self.courseId} - {self.payment_status}"
@@ -460,9 +468,10 @@ class TradingBot(models.Model):
         return self.name
 
 
-# ========== BOT PAYMENTS AND ACCESS ==========
+# ========== BOT PAYMENTS (UPDATED WITH PAYSTACK) ==========
 class BotPayments(models.Model):
     email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)  # For M-Pesa
     botId = models.IntegerField()
     userId = models.IntegerField()
     amountkes = models.FloatField(default=0.0)
@@ -470,7 +479,9 @@ class BotPayments(models.Model):
     mpesa_number = models.CharField(max_length=20, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     payment_status = models.CharField(max_length=20, default='pending')
-    payment_method = models.CharField(max_length=20, default='mpesa')
+    payment_method = models.CharField(max_length=20, default='paystack')
+    payment_reference = models.CharField(max_length=100, blank=True, null=True)
+    channel = models.CharField(max_length=50, blank=True, null=True)  # card, mobile_money
     
     def __str__(self):
         return f"{self.email} - Bot {self.botId} - {self.payment_status}"

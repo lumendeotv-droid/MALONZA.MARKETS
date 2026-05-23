@@ -7,9 +7,15 @@ from .models import *
 
 # ========== CUSTOM ADMIN SITE WITH MALONZA THEME ==========
 class MalonzaAdminSite(AdminSite):
-    site_header = "Malonza Markets Admin Panel"
-    site_title = "Malonza Markets Admin"
-    index_title = "Dashboard - Manage Your Trading Platform"
+    site_header = "Malonza Markets Dashboard"
+    site_title = "Malonza Markets - Admin Panel"
+    index_title = "Welcome to Malonza Markets Admin Dashboard"
+    
+    def each_context(self, request):
+        context = super().each_context(request)
+        context['site_header'] = "Malonza Markets Dashboard"
+        context['site_title'] = "Malonza Markets"
+        return context
     
     def get_app_list(self, request):
         app_list = super().get_app_list(request)
@@ -20,7 +26,8 @@ class MalonzaAdminSite(AdminSite):
             'Video', 'TradingBot', 'Blog',
             'Course', 'CourseVideo', 'Testimonial', 'Broker', 'SocialLink',
             'SiteUsers', 'ContactMessage', 'NewsletterSubscription',
-            'ServicePayments', 'CoursePayments', 'UserCourseAccess', 'BotPayments', 'UserBotAccess'
+            'ServicePayments', 'CoursePayments', 'BotPayments', 
+            'UserCourseAccess', 'UserBotAccess'
         ]
         
         for app in app_list:
@@ -29,13 +36,8 @@ class MalonzaAdminSite(AdminSite):
         
         return app_list
 
+# Create admin site instance
 admin_site = MalonzaAdminSite(name='malonza_admin')
-
-class MalonzaModelAdmin(admin.ModelAdmin):
-    class Media:
-        css = {
-            'all': ('admin/css/malonza-admin.css',)
-        }
 
 # ========== SITE CONTENT SECTION ==========
 class HeroSectionAdmin(admin.ModelAdmin):
@@ -115,7 +117,7 @@ class PricingPlanAdmin(admin.ModelAdmin):
         return f"{star}{obj.name}"
     name_display.short_description = 'Plan'
 
-# ========== VIDEOS SECTION WITH FILE UPLOAD ==========
+# ========== VIDEOS SECTION ==========
 class VideoAdmin(admin.ModelAdmin):
     list_display = ['thumbnail_preview', 'title', 'video_type', 'is_active', 'order', 'created_at']
     list_editable = ['order', 'is_active']
@@ -229,11 +231,11 @@ class BlogAdmin(admin.ModelAdmin):
         return "No Image"
     image_preview.short_description = 'Image'
 
-# ========== MARKETING SECTION ==========
+# ========== COURSES SECTION ==========
 class CourseAdmin(admin.ModelAdmin):
     list_display = ['image_preview', 'title', 'priceusd', 'is_active', 'order']
     list_editable = ['order', 'is_active', 'priceusd']
-    inlines = [CourseVideoInline]  # Add inline videos for courses
+    inlines = [CourseVideoInline]
     search_fields = ['title', 'description']
     
     def image_preview(self, obj):
@@ -242,6 +244,16 @@ class CourseAdmin(admin.ModelAdmin):
         return "No Image"
     image_preview.short_description = 'Image'
 
+class CourseVideoAdmin(admin.ModelAdmin):
+    list_display = ['title', 'course', 'video_type', 'order', 'created_at']
+    list_filter = ['video_type', 'created_at']
+    search_fields = ['title', 'description', 'course__title']
+    list_editable = ['order']
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('course')
+
+# ========== MARKETING SECTION ==========
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ['name', 'role', 'is_active', 'order', 'created_at']
     list_editable = ['order', 'is_active']
@@ -272,8 +284,8 @@ class SiteUsersAdmin(admin.ModelAdmin):
     
     def status_badge(self, obj):
         if obj.is_active:
-            return format_html('<span style="background:#28a745; color:white; padding:2px 8px;">Active</span>')
-        return format_html('<span style="background:#dc3545; color:white; padding:2px 8px;">Inactive</span>')
+            return format_html('<span style="background:#28a745; color:white; padding:2px 8px; border-radius:4px;">✅ Active</span>')
+        return format_html('<span style="background:#dc3545; color:white; padding:2px 8px; border-radius:4px;">❌ Inactive</span>')
     status_badge.short_description = 'Status'
 
 class ContactMessageAdmin(admin.ModelAdmin):
@@ -283,67 +295,168 @@ class ContactMessageAdmin(admin.ModelAdmin):
     
     def status_badge(self, obj):
         colors = {'pending': '#ffc107', 'read': '#17a2b8', 'replied': '#28a745'}
-        return format_html('<span style="background:{}; color:white; padding:2px 8px;">{}</span>', 
+        return format_html('<span style="background:{}; color:white; padding:2px 8px; border-radius:4px;">{}</span>', 
                           colors.get(obj.status, '#6c757d'), obj.status.upper())
     status_badge.short_description = 'Status'
     
     actions = ['mark_as_read', 'mark_as_replied']
     def mark_as_read(self, request, queryset): queryset.update(status='read')
     def mark_as_replied(self, request, queryset): queryset.update(status='replied')
+    mark_as_read.short_description = "Mark selected as Read"
+    mark_as_replied.short_description = "Mark selected as Replied"
 
 class NewsletterSubscriptionAdmin(admin.ModelAdmin):
     list_display = ['email', 'subscribed_at', 'is_active']
 
-# ========== PAYMENTS SECTION ==========
+# ========== PAYMENTS SECTION - COMPLETE ==========
 class ServicePaymentsAdmin(admin.ModelAdmin):
-    list_display = ['email', 'service', 'amount_display', 'payment_status_badge', 'timestamp']
-    list_filter = ['payment_status', 'payment_method', 'timestamp']
+    list_display = ['email', 'service', 'amount_display', 'payment_method_display', 'payment_status_badge', 'channel_badge', 'timestamp']
+    list_filter = ['payment_status', 'payment_method', 'channel', 'timestamp']
+    search_fields = ['email', 'service', 'payment_reference', 'phone', 'mpesa_number']
+    readonly_fields = ['payment_reference', 'timestamp']
     
     def amount_display(self, obj):
-        return f"KES {obj.amountkes:,.0f}" if obj.amountkes > 0 else f"${obj.amountusd}"
+        if obj.amountkes > 0:
+            return f"KES {obj.amountkes:,.0f}"
+        return f"${obj.amountusd:,.2f} USD"
     amount_display.short_description = 'Amount'
     
+    def payment_method_display(self, obj):
+        method = obj.payment_method or 'unknown'
+        icons = {'paystack': '💰', 'mpesa': '📱', 'card': '💳'}
+        return f"{icons.get(method, '💸')} {method.upper()}"
+    payment_method_display.short_description = 'Method'
+    
+    def channel_badge(self, obj):
+        if obj.channel == 'mobile_money':
+            return format_html('<span style="background:#4CAF50; color:white; padding:2px 8px; border-radius:4px;">📱 M-Pesa</span>')
+        elif obj.channel == 'card':
+            return format_html('<span style="background:#0088cc; color:white; padding:2px 8px; border-radius:4px;">💳 Card</span>')
+        return format_html('<span style="background:#666; color:white; padding:2px 8px; border-radius:4px;">❓ Unknown</span>')
+    channel_badge.short_description = 'Channel'
+    
     def payment_status_badge(self, obj):
-        color = '#28a745' if obj.payment_status == 'completed' else '#ffc107'
-        return format_html('<span style="background:{}; color:white; padding:2px 8px;">{}</span>', color, obj.payment_status.upper())
+        if obj.payment_status == 'completed':
+            return format_html('<span style="background:#28a745; color:white; padding:2px 8px; border-radius:4px;">✅ COMPLETED</span>')
+        elif obj.payment_status == 'pending':
+            return format_html('<span style="background:#ffc107; color:#333; padding:2px 8px; border-radius:4px;">⏳ PENDING</span>')
+        return format_html('<span style="background:#dc3545; color:white; padding:2px 8px; border-radius:4px;">❌ FAILED</span>')
     payment_status_badge.short_description = 'Status'
 
 class CoursePaymentsAdmin(admin.ModelAdmin):
-    list_display = ['email', 'course', 'amount_display', 'payment_status_badge', 'timestamp']
-    list_filter = ['payment_status', 'payment_method', 'timestamp']
+    list_display = ['email', 'course_title', 'phone_number', 'amount_display', 'payment_method_display', 'payment_status_badge', 'channel_badge', 'timestamp']
+    list_filter = ['payment_status', 'payment_method', 'channel', 'timestamp']
+    search_fields = ['email', 'payment_reference', 'phone', 'mpesa_number']
+    readonly_fields = ['payment_reference', 'timestamp']
     
-    def course(self, obj):
+    def course_title(self, obj):
         try:
-            return Course.objects.get(id=obj.courseId).title
+            course = Course.objects.get(id=obj.courseId)
+            return format_html('<a href="/admin/myapp/course/{}/change/">{}</a>', course.id, course.title)
         except:
             return f"Course #{obj.courseId}"
-    course.short_description = 'Course'
+    course_title.short_description = 'Course'
+    
+    def phone_number(self, obj):
+        if obj.phone:
+            return obj.phone
+        if obj.mpesa_number:
+            return obj.mpesa_number
+        return '-'
+    phone_number.short_description = 'Phone'
     
     def amount_display(self, obj):
-        return f"KES {obj.amountkes:,.0f}" if obj.amountkes > 0 else f"${obj.amountusd}"
+        if obj.amountkes > 0:
+            return f"KES {obj.amountkes:,.0f}"
+        return f"${obj.amountusd:,.2f} USD"
     amount_display.short_description = 'Amount'
     
+    def payment_method_display(self, obj):
+        method = obj.payment_method or 'unknown'
+        icons = {'paystack': '💰', 'mpesa': '📱', 'card': '💳'}
+        return f"{icons.get(method, '💸')} {method.upper()}"
+    payment_method_display.short_description = 'Method'
+    
+    def channel_badge(self, obj):
+        if obj.channel == 'mobile_money':
+            return format_html('<span style="background:#4CAF50; color:white; padding:2px 8px; border-radius:4px;">📱 M-Pesa</span>')
+        elif obj.channel == 'card':
+            return format_html('<span style="background:#0088cc; color:white; padding:2px 8px; border-radius:4px;">💳 Card</span>')
+        return format_html('<span style="background:#666; color:white; padding:2px 8px; border-radius:4px;">❓ Unknown</span>')
+    channel_badge.short_description = 'Channel'
+    
     def payment_status_badge(self, obj):
-        color = '#28a745' if obj.payment_status == 'completed' else '#ffc107'
-        return format_html('<span style="background:{}; color:white; padding:2px 8px;">{}</span>', color, obj.payment_status.upper())
+        if obj.payment_status == 'completed':
+            return format_html('<span style="background:#28a745; color:white; padding:2px 8px; border-radius:4px;">✅ COMPLETED</span>')
+        elif obj.payment_status == 'pending':
+            return format_html('<span style="background:#ffc107; color:#333; padding:2px 8px; border-radius:4px;">⏳ PENDING</span>')
+        return format_html('<span style="background:#dc3545; color:white; padding:2px 8px; border-radius:4px;">❌ FAILED</span>')
     payment_status_badge.short_description = 'Status'
 
+class BotPaymentsAdmin(admin.ModelAdmin):
+    list_display = ['email', 'bot_name', 'phone_number', 'amount_display', 'payment_method_display', 'payment_status_badge', 'channel_badge', 'timestamp']
+    list_filter = ['payment_status', 'payment_method', 'channel', 'timestamp']
+    search_fields = ['email', 'payment_reference', 'phone', 'mpesa_number']
+    readonly_fields = ['payment_reference', 'timestamp']
+    
+    def bot_name(self, obj):
+        try:
+            bot = TradingBot.objects.get(id=obj.botId)
+            return format_html('<a href="/admin/myapp/tradingbot/{}/change/">{}</a>', bot.id, bot.name)
+        except:
+            return f"Bot #{obj.botId}"
+    bot_name.short_description = 'Bot'
+    
+    def phone_number(self, obj):
+        if obj.phone:
+            return obj.phone
+        if obj.mpesa_number:
+            return obj.mpesa_number
+        return '-'
+    phone_number.short_description = 'Phone'
+    
+    def amount_display(self, obj):
+        if obj.amountkes > 0:
+            return f"KES {obj.amountkes:,.0f}"
+        return f"${obj.amountusd:,.2f} USD"
+    amount_display.short_description = 'Amount'
+    
+    def payment_method_display(self, obj):
+        method = obj.payment_method or 'unknown'
+        icons = {'paystack': '💰', 'mpesa': '📱', 'card': '💳'}
+        return f"{icons.get(method, '💸')} {method.upper()}"
+    payment_method_display.short_description = 'Method'
+    
+    def channel_badge(self, obj):
+        if obj.channel == 'mobile_money':
+            return format_html('<span style="background:#4CAF50; color:white; padding:2px 8px; border-radius:4px;">📱 M-Pesa</span>')
+        elif obj.channel == 'card':
+            return format_html('<span style="background:#0088cc; color:white; padding:2px 8px; border-radius:4px;">💳 Card</span>')
+        return format_html('<span style="background:#666; color:white; padding:2px 8px; border-radius:4px;">❓ Unknown</span>')
+    channel_badge.short_description = 'Channel'
+    
+    def payment_status_badge(self, obj):
+        if obj.payment_status == 'completed':
+            return format_html('<span style="background:#28a745; color:white; padding:2px 8px; border-radius:4px;">✅ COMPLETED</span>')
+        elif obj.payment_status == 'pending':
+            return format_html('<span style="background:#ffc107; color:#333; padding:2px 8px; border-radius:4px;">⏳ PENDING</span>')
+        return format_html('<span style="background:#dc3545; color:white; padding:2px 8px; border-radius:4px;">❌ FAILED</span>')
+    payment_status_badge.short_description = 'Status'
+
+# ========== ACCESS MANAGEMENT ==========
 class UserCourseAccessAdmin(admin.ModelAdmin):
     list_display = ['user', 'course', 'purchased_at']
     list_filter = ['purchased_at']
     search_fields = ['user__email', 'user__username', 'course__title']
+    readonly_fields = ['purchased_at']
 
-# ========== COURSE VIDEOS ADMIN ==========
-class CourseVideoAdmin(admin.ModelAdmin):
-    list_display = ['title', 'course', 'video_type', 'order', 'created_at']
-    list_filter = ['video_type', 'created_at']
-    search_fields = ['title', 'description', 'course__title']
-    list_editable = ['order']
-    
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('course')
+class UserBotAccessAdmin(admin.ModelAdmin):
+    list_display = ['user', 'bot', 'purchased_at']
+    list_filter = ['purchased_at']
+    search_fields = ['user__email', 'user__username', 'bot__name']
+    readonly_fields = ['purchased_at']
 
-# ========== REGISTER ALL MODELS ==========
+# ========== REGISTER ALL MODELS WITH CUSTOM ADMIN SITE ==========
 admin_site.register(HeroSection, HeroSectionAdmin)
 admin_site.register(AboutSection, AboutSectionAdmin)
 admin_site.register(SiteSettings, SiteSettingsAdmin)
@@ -365,9 +478,15 @@ admin_site.register(ContactMessage, ContactMessageAdmin)
 admin_site.register(NewsletterSubscription, NewsletterSubscriptionAdmin)
 admin_site.register(ServicePayments, ServicePaymentsAdmin)
 admin_site.register(CoursePayments, CoursePaymentsAdmin)
+admin_site.register(BotPayments, BotPaymentsAdmin)
 admin_site.register(UserCourseAccess, UserCourseAccessAdmin)
+admin_site.register(UserBotAccess, UserBotAccessAdmin)
 
-# Also register with default admin
+# ========== ALSO REGISTER WITH DEFAULT ADMIN FOR BACKWARD COMPATIBILITY ==========
+admin.site.site_header = "Malonza Markets Dashboard"
+admin.site.site_title = "Malonza Markets"
+admin.site.index_title = "Welcome to Malonza Markets Admin"
+
 admin.site.register(HeroSection, HeroSectionAdmin)
 admin.site.register(AboutSection, AboutSectionAdmin)
 admin.site.register(SiteSettings, SiteSettingsAdmin)
@@ -389,4 +508,6 @@ admin.site.register(ContactMessage, ContactMessageAdmin)
 admin.site.register(NewsletterSubscription, NewsletterSubscriptionAdmin)
 admin.site.register(ServicePayments, ServicePaymentsAdmin)
 admin.site.register(CoursePayments, CoursePaymentsAdmin)
+admin.site.register(BotPayments, BotPaymentsAdmin)
 admin.site.register(UserCourseAccess, UserCourseAccessAdmin)
+admin.site.register(UserBotAccess, UserBotAccessAdmin)

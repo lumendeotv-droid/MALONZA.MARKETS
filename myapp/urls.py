@@ -1,8 +1,17 @@
 from django.urls import path, register_converter
 from . import views
-from .converter import FloatConverter
 from django.conf import settings
 from django.conf.urls.static import static
+
+# Custom converter for float amounts
+class FloatConverter:
+    regex = r'[\d]+\.?[\d]*'
+    
+    def to_python(self, value):
+        return float(value)
+    
+    def to_url(self, value):
+        return str(value)
 
 register_converter(FloatConverter, 'float')
 
@@ -21,23 +30,31 @@ urlpatterns = [
     path('auth_login', views.auth_login, name='auth_login'),
     path('logout', views.logout, name='logout'),
     
-    # Service Payments
+    # Service Payments ($50, $500, $750)
     path('payments/<float:amount>', views.payments, name='payments'),
-    path('mpesa_checkout', views.mpesa_checkout, name='mpesa_checkout'),
-    path('card_checkout', views.CardPayments, name="card_checkout"),
     
     # Course Payments
     path('coursepayments/<float:amount>/<int:course_id>/', views.coursepayments, name='coursepayments'),
-    path('course_mpesa_checkout', views.course_mpesa_checkout, name='course_mpesa_checkout'),
-    path('course_card_checkout', views.course_cardPayments, name="course_card_checkout"),
     
     # Bot Payments
     path('bot-payments/<int:bot_id>/', views.bot_payments, name='bot_payments'),
-    path('bot_mpesa_checkout', views.bot_mpesa_checkout, name='bot_mpesa_checkout'),
-    path('bot_card_checkout', views.bot_card_payments, name='bot_card_checkout'),
+    
+    # ========== PAYSTACK ROUTES ==========
+    path('paystack/initialize/', views.paystack_initialize, name='paystack_initialize'),
+    path('paystack/callback/', views.paystack_callback, name='paystack_callback'),
+    path('paystack/webhook/', views.paystack_webhook, name='paystack_webhook'),
     
     # Payment Status API
     path('api/payment-status/', views.check_payment_status, name='payment_status'),
+    path('api/get_user_email/', views.get_user_email, name='get_user_email'),
+    
+    # Legacy routes (kept for backward compatibility)
+    path('mpesa_checkout', views.mpesa_checkout, name='mpesa_checkout'),
+    path('card_checkout', views.CardPayments, name="card_checkout"),
+    path('course_mpesa_checkout', views.course_mpesa_checkout, name='course_mpesa_checkout'),
+    path('course_card_checkout', views.course_cardPayments, name="course_card_checkout"),
+    path('bot_mpesa_checkout', views.bot_mpesa_checkout, name='bot_mpesa_checkout'),
+    path('bot_card_checkout', views.bot_card_payments, name='bot_card_checkout'),
     
     # API Endpoints
     path('api/subscribe', views.subscribe_newsletter, name='subscribe'),

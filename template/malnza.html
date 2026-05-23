@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Malonza Markets - Your Local Market Guide</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Market navigation, local shopping assistance, market guide" name="keywords">
+    <meta content="Malonza Markets helps you navigate local markets and find exactly what you need. Personal shopping assistance and market guides." name="description">
+
+    <!-- Favicon (placeholder) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%232ecc71'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white'%3EM%3C/text%3E%3C/svg%3E">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow-x: hidden;
+        }
+        .light-services-section {
+            background: #f8f9fa;
+        }
+        .service-card-light {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .service-card-light:hover {
+            transform: translateY(-5px);
+            border-color: #2ecc71;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .service-card-light .icon-box {
+            background: #f0f2f5;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        .service-card-light h4 {
+            color: #333;
+            font-weight: 600;
+        }
+        .service-card-light p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .price-badge {
+            background: #f0f2f5;
+            color: #2ecc71;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .light-pricing-section {
+            background: #f8f9fa;
+        }
+        .pricing-card-light {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .pricing-card-light:hover {
+            transform: translateY(-5px);
+            border-color: #2ecc71;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .pricing-card-light.featured {
+            border: 2px solid #2ecc71;
+        }
+        .popular-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #2ecc71;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .pricing-header {
+            padding: 30px 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .price-tag {
+            margin: 20px 0;
+        }
+        .price-tag .currency {
+            color: #2ecc71;
+            font-size: 1.2rem;
+            vertical-align: top;
+        }
+        .price-tag .amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #333;
+        }
+        .price-tag .period {
+            color: #666;
+        }
+        .pricing-features {
+            padding: 20px 30px;
+            min-height: 280px;
+        }
+        .pricing-features li {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .pricing-features li i {
+            color: #2ecc71;
+            margin-right: 10px;
+        }
+        .pricing-footer {
+            padding: 0 30px 30px;
+        }
+        .pricing-card-light .btn-primary {
+            background: #2ecc71;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .pricing-card-light .btn-primary:hover {
+            background: #27ae60;
+        }
+        
+        /* Blog Card Styles */
+        .blog-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .blog-card:hover {
+            transform: translateY(-5px);
+            border-color: #2ecc71;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .blog-content {
+            padding: 20px;
+        }
+        .blog-date {
+            color: #2ecc71;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .blog-title {
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .blog-excerpt {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .btn-read-more {
+            background: transparent;
+            border: 2px solid #2ecc71;
+            color: #2ecc71;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .btn-read-more:hover {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .marquee-wrapper {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .disclaimer-text {
+            white-space: nowrap;
+            display: inline-block;
+            font-size: 14px;
+            color: #ffffff;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        @media (max-width: 576px) {
+            .disclaimer-text {
+                font-size: 12px;
+                animation: marquee 35s linear infinite;
+            }
+        }
+
+        .market-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .market-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .market-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .market-card-body {
+            padding: 20px;
+        }
+        .market-card h4 {
+            color: #2ecc71;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .market-location {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+        .market-location i {
+            color: #2ecc71;
+            margin-right: 5px;
+        }
+
+        /* Navbar responsive fixes */
+        @media (max-width: 991.98px) {
+            .navbar-brand h1 {
+                font-size: 1.5rem !important;
+            }
+            .navbar .d-flex.ms-lg-3 {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: center;
+                gap: 10px;
+            }
+            .navbar .d-flex.ms-lg-3 .btn {
+                flex: 1;
+                text-align: center;
+                font-size: 0.85rem;
+                padding: 6px 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar-brand h1 {
+                font-size: 1.2rem !important;
+            }
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #1a5f2a 0%, #2ecc71 100%);
+            padding: 80px 0;
+        }
+        
+        .guide-img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+        }
+        
+        .btn-success-custom {
+            background: #2ecc71;
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+        .btn-success-custom:hover {
+            background: #27ae60;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: #2ecc71;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .contact-icon i {
+            color: white;
+            font-size: 1.2rem;
+        }
+        .bg-primary-custom {
+            background-color: #2ecc71;
+        }
+        .text-primary-custom {
+            color: #2ecc71;
+        }
+        .btn-outline-success-custom {
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg navbar-dark px-3 px-md-5 py-2 py-lg-3 sticky-top" style="background: #1a5f2a;">
+        <a href="#" class="navbar-brand p-0">
+            <h1 class="m-0" style="font-size: 2rem;">Malonza Markets&reg;</h1>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0">
+                <a href="#home" class="nav-item nav-link active">Home</a>
+                <a href="#about" class="nav-item nav-link">About</a>
+                <a href="#services" class="nav-item nav-link">Services</a>
+                <a href="#markets" class="nav-item nav-link">Markets</a>
+                <a href="#guides" class="nav-item nav-link">Guides</a>
+                <a href="#blog" class="nav-item nav-link">Blog</a>
+                <a href="#contact" class="nav-item nav-link">Contact</a>
+            </div>
+            <div class="d-flex ms-lg-3 mt-3 mt-lg-0">
+                <a href="#" class="btn btn-light" style="margin-right: 5px; color: #1a5f2a;" data-bs-toggle="modal" data-bs-target="#registerModal">
+                    <i class="fas fa-user-plus me-1"></i> Register
+                </a>
+                <a href="#" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <i class="fas fa-sign-in-alt me-1"></i> Login
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Hero Section Start -->
+    <section id="home" class="hero-section">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-white" data-aos="fade-right">
+                    <h5 class="text-uppercase mb-3" style="letter-spacing: 2px;">Welcome to Malonza Markets</h5>
+                    <h1 class="display-4 fw-bold mb-4">Your Personal Guide to Local Markets</h1>
+                    <p class="fs-5 mb-4">Navigate any market with confidence. We help you find exactly what you need, negotiate prices, and shop like a pro. No more getting lost or overpaying.</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="#services" class="btn btn-light btn-lg fw-bold" style="color: #1a5f2a;">Get Started</a>
+                        <a href="#contact" class="btn btn-outline-light btn-lg">Book a Guide →</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-4 mt-lg-0" data-aos="fade-left">
+                    <img src="https://picsum.photos/id/104/600/400" alt="Market Guide" class="guide-img">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Hero Section End -->
+
+    <!-- Stats Section -->
+    <div class="container-fluid py-4" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-md-3 col-6" data-aos="zoom-in">
+                    <div class="p-3">
+                        <h2 class="text-success mb-0 counter">15</h2>
+                        <p class="text-muted mb-0">Markets Covered</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="p-3">
+                        <h2 class="text-success mb-0 counter">500</h2>
+                        <p class="text-muted mb-0">Happy Shoppers</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="p-3">
+                        <h2 class="text-success mb-0 counter">50</h2>
+                        <p class="text-muted mb-0">Market Guides</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="p-3">
+                        <h2 class="text-success mb-0 counter">98</h2>
+                        <p class="text-muted mb-0">Satisfaction Rate</p>
+                        <span class="small">%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="container-fluid py-5" id="about">
+        <div class="container py-4">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="mb-4">
+                        <h5 class="text-uppercase mb-3" style="color: #2ecc71; letter-spacing: 1.5px;">ABOUT US</h5>
+                        <h2 class="mb-3" style="color: #333; font-weight: 700;">Making Local Markets <span style="color: #2ecc71;">Accessible to Everyone</span></h2>
+                        <p style="color: #666; line-height: 1.7;">Malonza Markets is a family-owned business dedicated to helping people navigate local markets with ease. We understand that markets can be overwhelming - crowded, confusing, and sometimes intimidating. That's why we're here to guide you every step of the way.</p>
+                        <p style="color: #666; line-height: 1.7;">Whether you're looking for fresh produce, traditional crafts, household items, or specialty goods, our experienced guides will take you to the best vendors and help you get fair prices.</p>
+                    </div>
+                    <div class="d-flex align-items-center mb-4 p-3" style="background: rgba(46, 204, 113, 0.1); border-left: 3px solid #2ecc71;">
+                        <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <i class="fa fa-phone-alt text-white"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1" style="color: #333;">Ready for a guided tour?</h6>
+                            <h5 class="mb-0" style="color: #2ecc71;">+254 703 987 878</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#" class="btn btn-sm py-2 px-3" style="background: #2ecc71; color: white; font-weight: 600;">
+                            <i class="fab fa-telegram-plane me-1"></i> Telegram
+                        </a>
+                        <a href="#" class="btn btn-sm py-2 px-3" style="background: #075E54; color: white; font-weight: 600;">
+                            <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <img src="https://picsum.photos/id/159/600/400" alt="Local Market" style="width: 100%; height: 400px; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="container-fluid px-0 py-5 light-services-section" id="services">
+        <div class="container py-5">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h5 class="text-uppercase mb-3" style="color: #2ecc71; letter-spacing: 1.5px; font-weight: 600;">WHAT WE OFFER</h5>
+                <h2 class="display-5 fw-bold" style="color: #333;">Your Complete Market Companion</h2>
+                <div class="mx-auto" style="max-width: 700px;">
+                    <p class="mb-0" style="color: #666;">From navigation help to personal shopping assistance - we've got you covered.</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-card-light p-4 h-100">
+                        <div class="icon-box mb-4"><i class="fas fa-map-marked-alt" style="color: #2ecc71; font-size: 1.8rem;"></i></div>
+                        <h4 class="mb-3">Market Navigation</h4>
+                        <p>Never get lost again. Our guides will show you the best routes and help you find specific items quickly.</p>
+                        <div class="mt-3"><span class="price-badge">From KES 500</span></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card-light p-4 h-100">
+                        <div class="icon-box mb-4"><i class="fas fa-shopping-cart" style="color: #2ecc71; font-size: 1.8rem;"></i></div>
+                        <h4 class="mb-3">Personal Shopping</h4>
+                        <p>Let us shop for you! Send us your list and we'll get everything at the best prices.</p>
+                        <div class="mt-3"><span class="price-badge">10% Service Fee</span></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-card-light p-4 h-100" style="border: 2px solid #2ecc71;">
+                        <div class="icon-box mb-4"><i class="fas fa-hand-holding-usd" style="color: #2ecc71; font-size: 1.8rem;"></i></div>
+                        <h4 class="mb-3">Price Negotiation</h4>
+                        <p>Get the best deals with our expert negotiators. We know the vendors and the fair prices.</p>
+                        <div class="mt-3"><span class="price-badge">Savings Guaranteed</span></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-card-light p-4 h-100">
+                        <div class="icon-box mb-4"><i class="fas fa-chalkboard-teacher" style="color: #2ecc71; font-size: 1.8rem;"></i></div>
+                        <h4 class="mb-3">Market Training</h4>
+                        <p>Learn how to shop like a pro. Our 2-day training covers navigation, negotiation, and vendor relationships.</p>
+                        <div class="mt-3"><span class="price-badge">KES 2,500</span></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="service-card-light p-4 h-100">
+                        <div class="icon-box mb-4"><i class="fas fa-truck" style="color: #2ecc71; font-size: 1.8rem;"></i></div>
+                        <h4 class="mb-3">Delivery Service</h4>
+                        <p>Can't carry everything? We'll deliver your purchases right to your doorstep.</p>
+                        <div class="mt-3"><span class="price-badge">From KES 300</span></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="service-card-light p-4 h-100">
+                        <div class="icon-box mb-4"><i class="fas fa-users" style="color: #2ecc71; font-size: 1.8rem;"></i></div>
+                        <h4 class="mb-3">Group Tours</h4>
+                        <p>Bring your friends or family for a fun market exploration experience. Great for tourists!</p>
+                        <div class="mt-3"><span class="price-badge">KES 1,000/person</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Markets We Cover Section -->
+    <div class="container-fluid py-5" id="markets" style="background: #0a1f0f;">
+        <div class="container py-5">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h5 class="text-uppercase mb-3" style="color: #2ecc71; letter-spacing: 1.5px;">Markets We Cover</h5>
+                <h2 class="display-5 fw-bold text-white mb-3">Explore Popular Markets</h2>
+                <p class="text-white-50">We operate across Nairobi's most vibrant markets and beyond.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="flip-left" data-aos-delay="100">
+                    <div class="market-card"><img src="https://picsum.photos/id/20/400/250" alt="City Market"><div class="market-card-body"><h4>City Market</h4><div class="market-location"><i class="fas fa-map-marker-alt"></i> Nairobi CBD</div><p>Fresh produce, traditional crafts, meats, and souvenirs. Our most popular destination.</p><span class="price-badge">Guided tour: KES 500</span></div></div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="flip-left" data-aos-delay="200">
+                    <div class="market-card"><img src="https://picsum.photos/id/30/400/250" alt="Maasai Market"><div class="market-card-body"><h4>Maasai Market</h4><div class="market-location"><i class="fas fa-map-marker-alt"></i> Various Locations</div><p>Authentic African crafts, jewelry, fabrics, and artwork from local artisans.</p><span class="price-badge">Guided tour: KES 600</span></div></div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="flip-left" data-aos-delay="300">
+                    <div class="market-card"><img src="https://picsum.photos/id/40/400/250" alt="Gikomba Market"><div class="market-card-body"><h4>Gikomba Market</h4><div class="market-location"><i class="fas fa-map-marker-alt"></i> Gikomba, Nairobi</div><p>Second-hand clothes (mitumba), shoes, and bargain finds. Expert negotiation help available.</p><span class="price-badge">Guided tour: KES 400</span></div></div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="flip-left" data-aos-delay="400">
+                    <div class="market-card"><img src="https://picsum.photos/id/50/400/250" alt="Kirinyaga Road"><div class="market-card-body"><h4>Kirinyaga Road Market</h4><div class="market-location"><i class="fas fa-map-marker-alt"></i> Industrial Area</div><p>Wholesale prices on electronics, hardware, and household goods.</p><span class="price-badge">Guided tour: KES 450</span></div></div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="flip-left" data-aos-delay="500">
+                    <div class="market-card"><img src="https://picsum.photos/id/60/400/250" alt="Toi Market"><div class="market-card-body"><h4>Toi Market</h4><div class="market-location"><i class="fas fa-map-marker-alt"></i> Ngara Road</div><p>Variety of second-hand goods, electronics, and unique finds.</p><span class="price-badge">Guided tour: KES 400</span></div></div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="flip-left" data-aos-delay="600">
+                    <div class="market-card"><img src="https://picsum.photos/id/70/400/250" alt="Kariokor"><div class="market-card-body"><h4>Kariokor Market</h4><div class="market-location"><i class="fas fa-map-marker-alt"></i> Pangani, Nairobi</div><p>Second-hand clothes, shoes, and household items. Great for bargain hunters.</p><span class="price-badge">Guided tour: KES 400</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <div class="container-fluid py-5 light-pricing-section" id="guides">
+        <div class="container py-5">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="d-block text-uppercase fw-semibold mb-2" style="color: #2ecc71;">Guide Packages</span>
+                <h2 class="display-5 fw-bold" style="color: #333;">Choose Your Shopping Experience</h2>
+                <p style="color: #666;">Flexible packages for every need and budget.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="100">
+                    <div class="pricing-card-light h-100"><div class="pricing-header"><h4>Basic Tour</h4><p>2-Hour Market Visit</p><div class="price-tag"><span class="currency">KES</span><span class="amount">500</span><span class="period">/person</span></div></div><div class="pricing-features"><ul class="list-unstyled"><li><i class="fas fa-check-circle"></i> 2-hour guided tour</li><li><i class="fas fa-check-circle"></i> Basic navigation help</li><li><i class="fas fa-check-circle"></i> Vendor introductions</li><li><i class="fas fa-check-circle"></i> One market location</li></ul></div><div class="pricing-footer"><a href="#" class="btn btn-primary w-100" onclick="alert('Booking feature coming soon! Call +254703987878')">Book Now</a></div></div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="200">
+                    <div class="pricing-card-light featured h-100"><div class="popular-badge">Most Popular</div><div class="pricing-header"><h4>Full Day</h4><p>4-5 Hour Experience</p><div class="price-tag"><span class="currency">KES</span><span class="amount">1,000</span><span class="period">/person</span></div></div><div class="pricing-features"><ul class="list-unstyled"><li><i class="fas fa-check-circle"></i> 4-5 hour guided tour</li><li><i class="fas fa-check-circle"></i> Multiple market visits</li><li><i class="fas fa-check-circle"></i> Price negotiation included</li><li><i class="fas fa-check-circle"></i> Shopping assistance</li><li><i class="fas fa-check-circle"></i> Refreshments included</li></ul></div><div class="pricing-footer"><a href="#" class="btn btn-primary w-100" onclick="alert('Booking feature coming soon! Call +254703987878')">Book Now</a></div></div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="300">
+                    <div class="pricing-card-light h-100"><div class="pricing-header"><h4>Shopping Service</h4><p>We Shop For You</p><div class="price-tag"><span class="currency">KES</span><span class="amount">500</span><span class="period">+10% fees</span></div></div><div class="pricing-features"><ul class="list-unstyled"><li><i class="fas fa-check-circle"></i> Send your shopping list</li><li><i class="fas fa-check-circle"></i> We find best prices</li><li><i class="fas fa-check-circle"></i> Quality checks included</li><li><i class="fas fa-check-circle"></i> Delivery to your door</li><li><i class="fas fa-check-circle"></i> Photo verification available</li></ul></div><div class="pricing-footer"><a href="#" class="btn btn-primary w-100" onclick="alert('Request service via WhatsApp +254703987878')">Request Service</a></div></div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in-up" data-aos-delay="400">
+                    <div class="pricing-card-light h-100"><div class="pricing-header"><h4>Market Training</h4><p>2-Day Course</p><div class="price-tag"><span class="currency">KES</span><span class="amount">2,500</span><span class="period">/person</span></div></div><div class="pricing-features"><ul class="list-unstyled"><li><i class="fas fa-check-circle"></i> Navigation techniques</li><li><i class="fas fa-check-circle"></i> Negotiation skills</li><li><i class="fas fa-check-circle"></i> Vendor relationship building</li><li><i class="fas fa-check-circle"></i> Quality assessment</li><li><i class="fas fa-check-circle"></i> Certificate of completion</li></ul></div><div class="pricing-footer"><a href="#" class="btn btn-primary w-100" onclick="alert('Enroll now! Contact +254703987878')">Enroll Now</a></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Section -->
+    <div class="container-fluid py-5" id="blog" style="background: #0a1f0f;">
+        <div class="container py-5">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <span class="text-success mb-2 d-block text-uppercase fw-semibold">Market Tips</span>
+                <h2 class="display-5 fw-bold text-white mb-3">Shopping Guides & Tips</h2>
+                <p class="text-white-50">Expert advice to help you shop smarter at local markets.</p>
+            </div>
+            <div class="row g-4" id="blogContainer"></div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="container-fluid py-5" id="contact">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-7" data-aos="fade-right">
+                    <div class="section-title position-relative pb-3 mb-5"><h5 class="fw-bold text-primary-custom text-uppercase">Request A Call Back</h5><h1 class="mb-0">Please Feel Free to Contact Us</h1></div>
+                    <p class="mb-4">We prioritize accessibility and support for our clients. Our chat services are always available, alongside open social media channels. Reach out anytime via message, email, or call—day or night.</p>
+                    <div class="d-flex align-items-center mt-2"><div class="bg-primary-custom d-flex align-items-center justify-content-center rounded" style="width:60px;height:60px;"><i class="fa fa-phone-alt text-white"></i></div><div class="ps-4"><h5 class="mb-2">Call to ask any question</h5><h4 class="text-primary-custom mb-0">+254703987878</h4></div></div>
+                    <div class="d-flex align-items-center mt-4"><div class="d-flex align-items-center justify-content-center rounded" style="width:60px;height:60px;background-color:#075E54;"><a href="#" style="color:white;"><i class="fab fa-whatsapp"></i></a></div><div class="ps-4"><h5 class="mb-2">Click Icon To Text Us On Whatsapp</h5><h4 class="text-primary-custom mb-0">+254703987878</h4></div></div>
+                </div>
+                <div class="col-lg-5" data-aos="fade-left">
+                    <div class="bg-primary-custom rounded h-100 d-flex align-items-center p-5"><form id="contactForm" style="width:100%;"><div class="row g-3"><div class="col-xl-12"><input id="name" type="text" class="form-control bg-light border-0" placeholder="Your Name" style="height:55px;" required></div><div class="col-12"><input id="phone" type="tel" class="form-control bg-light border-0" placeholder="Your Whatsapp Number" style="height:55px;" required></div><div class="col-12"><select id="package" class="form-select bg-light border-0" style="height:55px;" required><option value="">Select A Package</option><option value="Basic Tour">Basic Tour (KES 500)</option><option value="Full Day Tour">Full Day Tour (KES 1000)</option><option value="Shopping Service">Shopping Service</option><option value="Market Training">Market Training (KES 2500)</option></select></div><div class="col-12"><textarea id="message" required class="form-control bg-light border-0" rows="3" placeholder="Message"></textarea></div><div class="col-12"><button class="btn btn-dark w-100 py-3" type="submit">Send Message</button></div></div></form></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="container-fluid bg-dark text-light mt-5">
+        <div class="container"><div class="row gx-5"><div class="col-lg-4 col-md-6 footer-about"><div class="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary-custom p-4"><a href="#" class="navbar-brand"><h1 class="m-0 text-white">Malonza Markets&reg;</h1></a><p class="mt-3 mb-4">Welcome to Malonza Markets&reg; where Africa's top market guides gather. Learn and grow with the best.</p><form id="newsletterForm" style="width:100%;"><div class="input-group"><input type="email" id="newsletterEmail" class="form-control border-white p-3" placeholder="Subscribe to newsletter" required><button class="btn btn-dark" type="submit">Subscribe</button></div></form></div></div>
+        <div class="col-lg-8 col-md-6"><div class="row gx-5"><div class="col-lg-4 col-md-12 pt-5 mb-5"><h3 class="text-light mb-4">Get In Touch</h3><div class="d-flex mb-2"><i class="bi bi-geo-alt text-primary-custom me-2"></i><p class="mb-0">Nairobi, Kenya</p></div><div class="d-flex mb-2"><i class="bi bi-envelope-open text-primary-custom me-2"></i><p class="mb-0">malonzanicholas@gmail.com</p></div><div class="d-flex mb-2"><i class="bi bi-telephone text-primary-custom me-2"></i><p class="mb-0">+254703987878</p></div></div>
+        <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5"><h3 class="text-light mb-4">Quick Links</h3><div class="d-flex flex-column"><a class="text-light mb-2" href="#home">Home</a><a class="text-light mb-2" href="#about">About Us</a><a class="text-light mb-2" href="#services">Our Services</a><a class="text-light" href="#contact">Contact Us</a></div></div>
+        <div class="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5"><h3 class="text-light mb-4">Popular Links</h3><div class="d-flex flex-column"><a class="text-light mb-2" href="#guides">Pricing</a><a class="text-light mb-2" href="#markets">Markets</a><a class="text-light mb-2" href="#blog">Blog</a><a class="text-light" href="#contact">Support</a></div></div></div></div></div></div></div>
+    <div class="container-fluid text-white" style="background:#061429;"><div class="container text-center py-3"><p class="mb-0">&copy; Malonza Markets&reg;. All Rights Reserved. Designed by Mancham Developers</p></div></div>
+    <div class="container-fluid bg-dark text-light py-2"><div class="marquee-wrapper"><p class="disclaimer-text m-0">Disclaimer: Malonza Markets provides market navigation and shopping assistance only. We are not responsible for any purchase decisions made by clients. Please exercise your own judgment when shopping.</p></div></div>
+
+    <a href="#" class="btn btn-lg btn-primary-custom btn-lg-square rounded back-to-top position-fixed bottom-0 end-0 m-4" style="z-index:99;"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        AOS.init({ duration: 800, once: true });
+        
+        // Counter animation
+        function animateCounters() {
+            $('.counter').each(function() {
+                $(this).prop('Counter', 0).animate({ Counter: $(this).text() }, { duration: 2000, easing: 'swing', step: function(now) { $(this).text(Math.ceil(now)); } });
+            });
+        }
+        animateCounters();
+        
+        // Blog posts data
+        const blogs = [
+            { id:1, title:"10 Essential Tips for First-Time Market Shoppers", date:"May 15, 2025", excerpt:"Learn the fundamental rules to navigate any market confidently...", content:"<p>Start early, bring cash, don't be afraid to negotiate, and always check quality before paying. Our expert guides share insider tips.</p>", image:"https://picsum.photos/id/101/400/200" },
+            { id:2, title:"How to Spot Quality Produce at Local Markets", date:"May 10, 2025", excerpt:"Freshness indicators and vendor secrets revealed...", content:"<p>Look for vibrant colors, firm textures, and ask for tasting samples. Seasonal produce is always best.</p>", image:"https://picsum.photos/id/108/400/200" },
+            { id:3, title:"Mastering the Art of Negotiation", date:"May 5, 2025", excerpt:"Get the best prices without offending vendors...", content:"<p>Be polite, know the average price, bundle items, and walk away if needed. Vendors respect confident buyers.</p>", image:"https://picsum.photos/id/128/400/200" }
+        ];
+        
+        function renderBlogs() {
+            let html = '';
+            blogs.forEach(blog => {
+                html += `<div class="col-md-4"><div class="blog-card"><img src="${blog.image}" class="blog-image"><div class="blog-content"><span class="blog-date"><i class="far fa-calendar-alt me-1"></i> ${blog.date}</span><h5 class="blog-title">${blog.title}</h5><p class="blog-excerpt">${blog.excerpt}</p><button class="btn-read-more" onclick="openBlogModal('${blog.title.replace(/'/g, "\\'")}', '${blog.content.replace(/'/g, "\\'")}', '${blog.image}', '${blog.date}')">Read More <i class="fas fa-arrow-right ms-1"></i></button></div></div></div>`;
+            });
+            document.getElementById('blogContainer').innerHTML = html;
+        }
+        
+        window.openBlogModal = (title, content, image, date) => {
+            const modalHtml = `<div class="modal fade" id="blogModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Blog Post</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><img src="${image}" style="width:100%; border-radius:8px; margin-bottom:20px;"><h2 style="color:#333;">${title}</h2><small style="color:#2ecc71;">${date}</small><div style="margin-top:20px;">${content}</div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div></div></div></div>`;
+            $('body').append(modalHtml);
+            $('#blogModal').modal('show');
+            $('#blogModal').on('hidden.bs.modal', function() { $('#blogModal').remove(); });
+        };
+        
+        renderBlogs();
+        
+        // Form handlers
+        $('#contactForm').on('submit', function(e) {
+            e.preventDefault();
+            alert(`Thank you ${$('#name').val()}! We'll contact you on ${$('#phone').val()} within 24 hours.`);
+            $('#contactForm')[0].reset();
+        });
+        
+        $('#newsletterForm').on('submit', function(e) {
+            e.preventDefault();
+            alert(`Subscribed! Check your inbox at ${$('#newsletterEmail').val()}`);
+            $('#newsletterEmail').val('');
+        });
+        
+        // Smooth scroll
+        $('a[href^="#"]').on('click', function(e) {
+            e.preventDefault();
+            const target = $(this.hash);
+            if(target.length) { $('html, body').animate({ scrollTop: target.offset().top - 70 }, 800); }
+        });
+        
+        // Back to top
+        $(window).scroll(function() { if($(this).scrollTop() > 300) $('.back-to-top').fadeIn(); else $('.back-to-top').fadeOut(); });
+    </script>
+</body>
+</html>

@@ -64,7 +64,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dict.wsgi.application'
 
-# Database - FIXED: removed conn_health_checks
+# Database
 DATABASES = {
     'default': dj_database_url.config(
         default='postgresql://postgres:aEGySwisWYqOzQsPSHAbMIElQHVqlFJY@nozomi.proxy.rlwy.net:23005/railway',
@@ -86,15 +86,13 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Static and Media files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 if not DEBUG:
-    try:
-        STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    except:
-        STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
@@ -102,6 +100,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ========== PAYSTACK CONFIGURATION ==========
+PAYSTACK_PUBLIC_KEY = os.environ.get('PAYSTACK_PUBLIC_KEY', '')
+PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY', '')
+PAYSTACK_CALLBACK_URL = os.environ.get('PAYSTACK_CALLBACK_URL', 'https://malonzafx.up.railway.app/paystack/callback/')
+
+# ========== SSL/SECURITY CONFIGURATION ==========
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
@@ -122,6 +126,7 @@ else:
     USE_X_FORWARDED_HOST = False
     USE_X_FORWARDED_PORT = False
 
+# Railway environment detection
 if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('DATABASE_URL'):
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     USE_X_FORWARDED_HOST = True
